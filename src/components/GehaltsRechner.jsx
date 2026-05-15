@@ -11,6 +11,7 @@ const DEFAULTS = {
   kirchensteuer: false,
   bundesland: 'default',
   kinderlos: false,
+  kvZusatzProzent: 3.29,
 };
 
 export default function GehaltsRechner() {

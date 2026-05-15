@@ -2,16 +2,18 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #f4f6f9;
-  --surface: #ffffff;
-  --border: #dde3ec;
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --text: #1e293b;
-  --muted: #64748b;
-  --green: #16a34a;
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-2: #1f2937;
+  --border: #30363d;
+  --primary: #58a6ff;
+  --primary-hover: #79b8ff;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --green: #3fb950;
+  --red: #f85149;
   --radius: 10px;
-  --shadow: 0 2px 8px rgba(0,0,0,.08);
+  --shadow: 0 2px 12px rgba(0,0,0,.4);
 }
 
 body {
@@ -124,7 +126,12 @@ header h1 {
 .feld-gruppe select:focus {
   outline: none;
   border-color: var(--primary);
-  background: #fff;
+  background: var(--surface-2);
+}
+
+.feld-gruppe select option {
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .highlight-feld input,
@@ -132,7 +139,12 @@ header h1 {
   font-size: 1.15rem;
   font-weight: 600;
   border-color: var(--primary);
-  background: #fff;
+  background: var(--surface-2);
+}
+
+.feld-hinweis {
+  font-size: .78rem;
+  color: var(--muted);
 }
 
 .zweispaltig {
@@ -183,8 +195,8 @@ header h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #eff6ff;
-  border: 1.5px solid #bfdbfe;
+  background: #0d2044;
+  border: 1.5px solid #1e3a6e;
   border-radius: 8px;
   padding: 1rem 1.25rem;
   margin-bottom: .75rem;
@@ -242,7 +254,8 @@ header h1 {
 
 .gesamtsumme td {
   font-weight: 700;
-  background: #fef9c3;
+  background: #1a1f0a;
+  color: #d4d13a;
   font-size: .95rem;
 }
 
@@ -270,7 +283,7 @@ header h1 {
 }
 
 .differenz.positiv { color: var(--green); font-weight: 600; }
-.differenz.negativ { color: #dc2626; font-weight: 600; }
+.differenz.negativ { color: var(--red); font-weight: 600; }
 
 /* ── Gehaltsbausteine ────────────────────────────────────────────────────── */
 .bausteine-toggle {
@@ -300,8 +313,8 @@ header h1 {
   flex-direction: column;
   gap: .9rem;
   padding: 1rem;
-  background: #f0f9ff;
-  border: 1.5px solid #bae6fd;
+  background: #0c1e2e;
+  border: 1.5px solid #1e3a52;
   border-radius: 8px;
 }
 
@@ -309,7 +322,7 @@ header h1 {
   display: flex;
   flex-direction: column;
   gap: 0;
-  border-top: 1px solid #bae6fd;
+  border-top: 1px solid #1e3a52;
   padding-top: .6rem;
 }
 
@@ -318,7 +331,7 @@ header h1 {
   justify-content: space-between;
   font-size: .9rem;
   padding: .3rem .25rem;
-  border-bottom: 1px solid #e0f2fe;
+  border-bottom: 1px solid #1e3a52;
 }
 
 .baustein-gesamt {
@@ -327,7 +340,7 @@ header h1 {
   border-bottom: none;
   padding-top: .5rem;
   margin-top: .1rem;
-  border-top: 2px solid #7dd3fc;
+  border-top: 2px solid #1d6ca8;
 }
 
 input:disabled {
@@ -337,15 +350,15 @@ input:disabled {
 
 /* ── Reduzierungs-Variante ───────────────────────────────────────────────── */
 .ergebnis-reduzierung .ergebnis-highlight {
-  background: #fff1f2;
-  border-color: #fecdd3;
+  background: #2a0a0a;
+  border-color: #6b1a1a;
 }
 
-.negativ-akzent { color: #dc2626 !important; }
+.negativ-akzent { color: var(--red) !important; }
 
 .input-negativ {
-  border-color: #fca5a5 !important;
-  background: #fff1f2 !important;
+  border-color: #6b1a1a !important;
+  background: #1a0a0a !important;
 }
 
 .vergleichstabelle {
@@ -382,7 +395,7 @@ input:disabled {
 .vergleichstabelle td:not(:first-child) { text-align: right; }
 .vergleichstabelle th:not(:first-child) { text-align: right; }
 
-.aktive-zeile { background: #eff6ff; font-weight: 600; }
+.aktive-zeile { background: #0d2044; font-weight: 600; }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 footer {

@@ -22,6 +22,19 @@ export function SteuerOptionen({ werte, onChange }) {
       </div>
 
       <div className="feld-gruppe">
+        <label>KV-Zusatzbeitrag gesamt (%)</label>
+        <input
+          type="number"
+          min="0"
+          max="10"
+          step="0.01"
+          value={werte.kvZusatzProzent}
+          onChange={e => onChange('kvZusatzProzent', parseFloat(e.target.value) || 0)}
+        />
+        <span className="feld-hinweis">AN-Anteil: {((werte.kvZusatzProzent ?? 3.29) / 2).toFixed(3)} % · Ø-Satz 2026: 2,9 %</span>
+      </div>
+
+      <div className="feld-gruppe">
         <label>Bundesland (Kirchensteuer-Satz)</label>
         <select value={werte.bundesland} onChange={e => onChange('bundesland', e.target.value)}>
           <option value="default">Alle außer Bayern & BW (9 %)</option>

@@ -74,12 +74,14 @@ export function berechneJahresNetto({
   kirchensteuer = false,
   bundesland = 'default',
   kinderlos = false,
+  kvZusatzProzent = 2.9,
 }) {
   // ── Sozialversicherung ──────────────────────────────────────────────────────
   const grundlageKV = Math.min(jahresbrutto, BBG_KV);
   const grundlageRV = Math.min(jahresbrutto, BBG_RV);
 
-  const kvBeitrag = Math.round(grundlageKV * (SV.kv + SV.kvZusatz));
+  const kvZusatzAN = (kvZusatzProzent / 2) / 100;
+  const kvBeitrag = Math.round(grundlageKV * (SV.kv + kvZusatzAN));
   const pvBeitrag = Math.round(grundlageKV * (kinderlos ? SV.pvKinderlos : SV.pv));
   const rvBeitrag = Math.round(grundlageRV * SV.rv);
   const avBeitrag = Math.round(grundlageRV * SV.av);
@@ -158,6 +160,7 @@ export function berechneJahresNetto({
 
 export function berechneMonatsNetto(params) {
   const result = berechneJahresNetto({
+    kvZusatzProzent: 3.29,
     ...params,
     jahresbrutto: params.monatsbrutto * 12,
   });
