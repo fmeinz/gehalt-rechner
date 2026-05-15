@@ -1,0 +1,325 @@
+/* ── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --border: #dde3ec;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --text: #1e293b;
+  --muted: #64748b;
+  --green: #16a34a;
+  --radius: 10px;
+  --shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: .9rem;
+  margin-top: .25rem;
+}
+
+/* ── Tabs ────────────────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0;
+}
+
+.tab {
+  flex: 1;
+  padding: .65rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: .95rem;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color .15s, border-color .15s;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.tab:hover { color: var(--primary); }
+
+.tab.aktiv {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  background: var(--surface);
+}
+
+/* ── Karte ───────────────────────────────────────────────────────────────── */
+.rechner-karte {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.rechner-karte h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ── Felder ──────────────────────────────────────────────────────────────── */
+.feld-gruppe {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.feld-gruppe label {
+  font-size: .85rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.feld-gruppe input,
+.feld-gruppe select {
+  padding: .6rem .8rem;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color .15s;
+  width: 100%;
+}
+
+.feld-gruppe input:focus,
+.feld-gruppe select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #fff;
+}
+
+.highlight-feld input,
+.highlight-feld select {
+  font-size: 1.15rem;
+  font-weight: 600;
+  border-color: var(--primary);
+  background: #fff;
+}
+
+.zweispaltig {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* ── Steuer-Optionen ─────────────────────────────────────────────────────── */
+.steuer-optionen {
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+  padding: 1rem;
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.checkbox-gruppe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.checkbox-gruppe label {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .9rem;
+  cursor: pointer;
+}
+
+.checkbox-gruppe input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* ── Ergebnis ────────────────────────────────────────────────────────────── */
+.ergebnis {
+  border-top: 2px solid var(--border);
+  padding-top: 1rem;
+}
+
+.ergebnis-highlight {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: .75rem;
+}
+
+.ergebnis-highlight span:first-child {
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.netto-betrag {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* ── Aufschlüsselung (Details/Summary) ──────────────────────────────────── */
+.aufschluesselung summary {
+  cursor: pointer;
+  font-size: .9rem;
+  color: var(--primary);
+  font-weight: 500;
+  padding: .3rem 0;
+  user-select: none;
+}
+
+.aufschluesselung table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: .75rem;
+  font-size: .9rem;
+}
+
+.aufschluesselung td {
+  padding: .35rem .5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.aufschluesselung td:last-child { text-align: right; }
+
+.abschnitt-kopf td {
+  font-weight: 600;
+  font-size: .8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  background: var(--bg);
+  padding-top: .75rem;
+}
+
+.zwischensumme td {
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+}
+
+.gesamtsumme td {
+  font-weight: 700;
+  background: #fef9c3;
+  font-size: .95rem;
+}
+
+/* ── Hinweis ─────────────────────────────────────────────────────────────── */
+.hinweis {
+  font-size: .85rem;
+  color: var(--muted);
+  background: var(--bg);
+  border-radius: 6px;
+  padding: .6rem .8rem;
+}
+
+/* ── Steigerungsrechner ──────────────────────────────────────────────────── */
+.ergebnis-steigerung {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.steigerung-detail {
+  display: flex;
+  justify-content: space-between;
+  font-size: .95rem;
+  padding: .3rem 0;
+}
+
+.differenz.positiv { color: var(--green); font-weight: 600; }
+
+.vergleichstabelle {
+  margin-top: .5rem;
+}
+
+.vergleichstabelle h3 {
+  font-size: .9rem;
+  color: var(--muted);
+  margin-bottom: .5rem;
+}
+
+.vergleichstabelle table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+}
+
+.vergleichstabelle th {
+  text-align: left;
+  padding: .4rem .5rem;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  font-weight: 600;
+  font-size: .8rem;
+  color: var(--muted);
+}
+
+.vergleichstabelle td {
+  padding: .4rem .5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.vergleichstabelle td:not(:first-child) { text-align: right; }
+.vergleichstabelle th:not(:first-child) { text-align: right; }
+
+.aktive-zeile { background: #eff6ff; font-weight: 600; }
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: .78rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 500px) {
+  .tabs { gap: .25rem; }
+  .tab { font-size: .8rem; padding: .5rem .5rem; }
+  .netto-betrag { font-size: 1.4rem; }
+  .zweispaltig { grid-template-columns: 1fr; }
+}
