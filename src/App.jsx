@@ -1,17 +1,15 @@
 import { useState } from 'react';
-import MonatsBruttoRechner from './components/MonatsBruttoRechner';
-import JahresBruttoRechner from './components/JahresBruttoRechner';
+import GehaltsRechner from './components/GehaltsRechner';
 import SteigerungsRechner from './components/SteigerungsRechner';
 import './App.css';
 
 const TABS = [
-  { id: 'monat', label: 'Monatsbrutto' },
-  { id: 'jahr', label: 'Jahresbrutto' },
-  { id: 'steigerung', label: 'Gehaltssteigerung' },
+  { id: 'gehalt', label: 'Brutto → Netto' },
+  { id: 'steigerung', label: 'Steigerung / Reduzierung' },
 ];
 
 export default function App() {
-  const [aktiv, setAktiv] = useState('monat');
+  const [aktiv, setAktiv] = useState('gehalt');
 
   return (
     <div className="app">
@@ -33,8 +31,7 @@ export default function App() {
       </nav>
 
       <main>
-        {aktiv === 'monat' && <MonatsBruttoRechner />}
-        {aktiv === 'jahr' && <JahresBruttoRechner />}
+        {aktiv === 'gehalt' && <GehaltsRechner />}
         {aktiv === 'steigerung' && <SteigerungsRechner />}
       </main>
 
