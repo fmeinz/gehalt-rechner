@@ -18,6 +18,17 @@ export default function SteigerungsRechner() {
 
   const einheit = istJaehrlich ? '/Jahr' : '/Monat';
 
+  function handleJaehrlichToggle(checked) {
+    setBrutto(prev => {
+      const n = parseFloat(prev) || 0;
+      if (n === 0) return prev;
+      return checked
+        ? String(Math.round(n * 12))
+        : String(Math.round((n / 12) * 100) / 100);
+    });
+    setIstJaehrlich(checked);
+  }
+
   function differenzKlasse(diff) {
     if (diff > 0) return 'differenz positiv';
     if (diff < 0) return 'differenz negativ';
@@ -59,7 +70,7 @@ export default function SteigerungsRechner() {
           <input
             type="checkbox"
             checked={istJaehrlich}
-            onChange={e => setIstJaehrlich(e.target.checked)}
+            onChange={e => handleJaehrlichToggle(e.target.checked)}
           />
           Jahreswerte (statt Monatswerte)
         </label>
