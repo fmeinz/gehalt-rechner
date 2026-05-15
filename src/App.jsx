@@ -15,7 +15,7 @@ export default function App() {
     <div className="app">
       <header>
         <h1>Gehaltsrechner</h1>
-        <p className="subtitle">Deutschland 2025 – Näherungsrechnung</p>
+        <p className="subtitle">Deutschland 2026 – Näherungsrechnung</p>
       </header>
 
       <nav className="tabs">

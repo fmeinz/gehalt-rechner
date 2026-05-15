@@ -1,39 +1,41 @@
-// Deutsche Lohnsteuer-Berechnung 2025 (Näherungsrechnung nach BMF-Programmablaufplan)
-// Werte: Bundesministerium der Finanzen, Lohnsteuer-Programmablaufplan 2025
+// Deutsche Lohnsteuer-Berechnung 2026 (Näherungsrechnung nach BMF-Programmablaufplan)
+// Werte: Bundesministerium der Finanzen, Lohnsteuer-Programmablaufplan 2026
+// Quellen: BMF PAP 2026 (12.11.2025), GKV-Spitzenverband, Deutsche Rentenversicherung
 
-const GRUNDFREIBETRAG = 12_096;
-const BBG_KV = 66_600;   // Beitragsbemessungsgrenze Kranken-/Pflegeversicherung
-const BBG_RV = 96_600;   // Beitragsbemessungsgrenze Renten-/Arbeitslosenversicherung
+const GRUNDFREIBETRAG = 12_348;
+const BBG_KV = 69_750;   // Beitragsbemessungsgrenze Kranken-/Pflegeversicherung
+const BBG_RV = 101_400;  // Beitragsbemessungsgrenze Renten-/Arbeitslosenversicherung
 
-// Arbeitnehmer-Anteile Sozialversicherung 2025
+// Arbeitnehmer-Anteile Sozialversicherung 2026
 const SV = {
   kv: 0.0730,   // Krankenversicherung (allgemeiner Beitragssatz / 2)
-  kvZusatz: 0.0090, // durchschnittlicher Zusatzbeitrag 2025 / 2
-  pv: 0.0180,   // Pflegeversicherung (Regelfall)
-  pvKinderlos: 0.0240, // Pflegeversicherung ohne Kinder (>23 Jahre)
-  rv: 0.0930,   // Rentenversicherung
-  av: 0.0130,   // Arbeitslosenversicherung
+  kvZusatz: 0.0145, // durchschnittlicher Zusatzbeitrag 2026 / 2 (2,9 % / 2)
+  pv: 0.0180,   // Pflegeversicherung (Regelfall, 3,6 % / 2)
+  pvKinderlos: 0.0240, // Pflegeversicherung ohne Kinder >23 J. (+0,6 % Zuschlag)
+  rv: 0.0930,   // Rentenversicherung (18,6 % / 2)
+  av: 0.0130,   // Arbeitslosenversicherung (2,6 % / 2)
 };
 
-// Einkommensteuer nach zvE (zu versteuerndes Einkommen) – Grundtabelle 2025
+// Einkommensteuer nach zvE (zu versteuerndes Einkommen) – Grundtabelle 2026
+// Zonengrenzen: 0–12.348 / 12.349–17.799 / 17.800–69.878 / 69.879–277.825 / ≥277.826
 function berechneESt(zvE) {
-  if (zvE <= 12_096) return 0;
+  if (zvE <= 12_348) return 0;
 
-  if (zvE <= 17_430) {
-    const y = (zvE - 12_096) / 10_000;
-    return Math.floor((933.70 * y + 1_400) * y);
+  if (zvE <= 17_799) {
+    const y = (zvE - 12_348) / 10_000;
+    return Math.floor((914.50 * y + 1_400) * y);
   }
 
-  if (zvE <= 68_429) {
-    const z = (zvE - 17_430) / 10_000;
-    return Math.floor((176.40 * z + 2_397) * z + 1_044.50);
+  if (zvE <= 69_878) {
+    const z = (zvE - 17_799) / 10_000;
+    return Math.floor((173.10 * z + 2_397) * z + 1_034.90);
   }
 
   if (zvE <= 277_825) {
-    return Math.floor(0.42 * zvE - 10_911.92);
+    return Math.floor(0.42 * zvE - 11_136);
   }
 
-  return Math.floor(0.45 * zvE - 19_246.67);
+  return Math.floor(0.45 * zvE - 19_471);
 }
 
 // Kirchensteuer-Satz je Bundesland
@@ -119,9 +121,9 @@ export function berechneJahresNetto({
   }
 
   // ── Solidaritätszuschlag ────────────────────────────────────────────────────
-  // Freigrenze 2025: 19.950 € ESt (Einzelveranlagung)
-  // Kinderfreibetrag mindert die Freigrenze
-  const soliFreigrenze = 19_950 - kinder * 4_260;
+  // Freigrenze 2026: 20.350 € ESt (Einzelveranlagung)
+  // Kinderfreibetrag 2026: 4.878 € je Elternteil mindert die Freigrenze
+  const soliFreigrenze = 20_350 - kinder * 4_878;
   let soli = 0;
   if (lohnsteuer > soliFreigrenze) {
     soli = Math.round(Math.min(lohnsteuer * 0.055, (lohnsteuer - soliFreigrenze) * 0.119));
