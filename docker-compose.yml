@@ -1,0 +1,6 @@
+services:
+  gehaltsrechner:
+    build: .
+    ports:
+      - "9374:80"
+    restart: unless-stopped
