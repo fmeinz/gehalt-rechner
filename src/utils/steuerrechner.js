@@ -16,6 +16,23 @@ const SV = {
   av: 0.0130,   // Arbeitslosenversicherung (2,6 % / 2)
 };
 
+// Vorsorgepauschale (BMF PAP 2026): AN-Anteile RV + KV/PV mindern das zvE
+function berechneVorsorgepauschale({ jahresbrutto, kvZusatzAN, kinderlos, steuerklasse }) {
+  const grundlageKV = Math.min(jahresbrutto, BBG_KV);
+  const grundlageRV = Math.min(jahresbrutto, BBG_RV);
+
+  const vpsRV = Math.floor(grundlageRV * SV.rv);
+
+  const pvRate = kinderlos ? SV.pvKinderlos : SV.pv;
+  const vpsKVPV_aktuell = Math.floor(grundlageKV * (SV.kv + kvZusatzAN + pvRate));
+
+  // Mindest-KV/PV-Pauschale: min(12 % × Brutto, 1.900 € / 3.800 € für SK III)
+  const kvpvMax = steuerklasse === 3 ? 3_800 : 1_900;
+  const vpsKVPV = Math.max(vpsKVPV_aktuell, Math.min(Math.floor(jahresbrutto * 0.12), kvpvMax));
+
+  return vpsRV + vpsKVPV;
+}
+
 // Einkommensteuer nach zvE (zu versteuerndes Einkommen) – Grundtabelle 2026
 // Zonengrenzen: 0–12.348 / 12.349–17.799 / 17.800–69.878 / 69.879–277.825 / ≥277.826
 function berechneESt(zvE) {
@@ -93,42 +110,40 @@ export function berechneJahresNetto({
   const werbungskosten = 1_230;
   const sonderausgaben = 36;
 
+  const vps = berechneVorsorgepauschale({ jahresbrutto, kvZusatzAN, kinderlos, steuerklasse });
+
   let lohnsteuer;
   switch (steuerklasse) {
     case 1:
     case 4: {
-      // GFB ist in berechneESt eingebaut → nur WK + SA abziehen
-      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben);
+      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben - vps);
       lohnsteuer = berechneESt(zvE);
       break;
     }
     case 2: {
-      // Entlastungsbetrag Alleinerziehende 4.260 € zusätzlich abziehen
-      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben - 4_260);
+      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben - 4_260 - vps);
       lohnsteuer = berechneESt(zvE);
       break;
     }
     case 3: {
-      // Ehegattensplitting: zvE halbieren → berechneESt → verdoppeln.
-      // berechneESt liefert für zvE/2 natürlich den doppelten GFB-Vorteil.
-      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben);
+      // Ehegattensplitting: zvE halbieren → berechneESt → verdoppeln
+      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben - vps);
       lohnsteuer = berechneESt(Math.floor(zvE / 2)) * 2;
       break;
     }
     case 5: {
-      // SK V: kein GFB-Vorteil (liegt beim SK-III-Partner).
-      // GFB zum zvE addieren hebt Zone 1 auf und startet Besteuerung ab dem ersten Euro.
-      const zvE = Math.max(0, jahresbrutto - sonderausgaben);
+      // SK V: kein GFB-Vorteil – GFB-Offset addieren
+      const zvE = Math.max(0, jahresbrutto - sonderausgaben - vps);
       lohnsteuer = berechneESt(zvE + GRUNDFREIBETRAG);
       break;
     }
     case 6: {
-      // SK VI (Nebenjob): kein Freibetrag, keine Abzüge
+      // SK VI (Nebenjob): keine Pauschalen, keine VPS
       lohnsteuer = berechneESt(jahresbrutto + GRUNDFREIBETRAG);
       break;
     }
     default: {
-      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben);
+      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben - vps);
       lohnsteuer = berechneESt(zvE);
     }
   }
