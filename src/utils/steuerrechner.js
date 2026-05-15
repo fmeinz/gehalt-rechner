@@ -88,38 +88,49 @@ export function berechneJahresNetto({
   const svGesamt = kvBeitrag + pvBeitrag + rvBeitrag + avBeitrag;
 
   // ── Lohnsteuer: zvE je Steuerklasse ────────────────────────────────────────
+  // Hinweis: berechneESt enthält den Grundfreibetrag bereits in Zone 1 (0 % bis 12.348 €).
+  // Er darf daher NICHT nochmals vom zvE abgezogen werden.
   const werbungskosten = 1_230;
   const sonderausgaben = 36;
 
-  let zvE;
+  let lohnsteuer;
   switch (steuerklasse) {
     case 1:
-    case 4:
-      zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben - GRUNDFREIBETRAG);
+    case 4: {
+      // GFB ist in berechneESt eingebaut → nur WK + SA abziehen
+      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben);
+      lohnsteuer = berechneESt(zvE);
       break;
-    case 2:
-      zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben - GRUNDFREIBETRAG - 4_260);
+    }
+    case 2: {
+      // Entlastungsbetrag Alleinerziehende 4.260 € zusätzlich abziehen
+      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben - 4_260);
+      lohnsteuer = berechneESt(zvE);
       break;
-    case 3:
-      // Ehegattensplitting: doppelter Grundfreibetrag
-      zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben - GRUNDFREIBETRAG * 2);
+    }
+    case 3: {
+      // Ehegattensplitting: zvE halbieren → berechneESt → verdoppeln.
+      // berechneESt liefert für zvE/2 natürlich den doppelten GFB-Vorteil.
+      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben);
+      lohnsteuer = berechneESt(Math.floor(zvE / 2)) * 2;
       break;
-    case 5:
-      // Kein Grundfreibetrag, kein Werbungskostenabzug
-      zvE = Math.max(0, jahresbrutto - sonderausgaben);
+    }
+    case 5: {
+      // SK V: kein GFB-Vorteil (liegt beim SK-III-Partner).
+      // GFB zum zvE addieren hebt Zone 1 auf und startet Besteuerung ab dem ersten Euro.
+      const zvE = Math.max(0, jahresbrutto - sonderausgaben);
+      lohnsteuer = berechneESt(zvE + GRUNDFREIBETRAG);
       break;
-    case 6:
-      zvE = jahresbrutto;
+    }
+    case 6: {
+      // SK VI (Nebenjob): kein Freibetrag, keine Abzüge
+      lohnsteuer = berechneESt(jahresbrutto + GRUNDFREIBETRAG);
       break;
-    default:
-      zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben - GRUNDFREIBETRAG);
-  }
-
-  let lohnsteuer = berechneESt(zvE);
-
-  // Bei SK 3 wird die Steuer auf den halben zvE berechnet und verdoppelt (Splittingvorteil)
-  if (steuerklasse === 3) {
-    lohnsteuer = berechneESt(Math.floor(zvE / 2)) * 2;
+    }
+    default: {
+      const zvE = Math.max(0, jahresbrutto - werbungskosten - sonderausgaben);
+      lohnsteuer = berechneESt(zvE);
+    }
   }
 
   // ── Solidaritätszuschlag ────────────────────────────────────────────────────
